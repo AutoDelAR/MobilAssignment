@@ -1,0 +1,82 @@
+package TestCases;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+
+
+import ScrollUtil.ScrollUtil;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileDriver;
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.ElementOption;
+import static io.appium.java_client.touch.WaitOptions.waitOptions;
+import static io.appium.java_client.touch.offset.ElementOption.element;
+import static java.time.Duration.ofSeconds;
+import static io.appium.java_client.touch.offset.PointOption.point;
+import io.appium.java_client.MultiTouchAction;
+import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
+
+
+public class TestMultiTouch {
+
+	//private static final String AndroidKeycode = null;
+	public static AndroidDriver<WebElement> driver;
+
+	public static void main(String[] args) throws MalformedURLException, InterruptedException {
+
+	
+        DesiredCapabilities capabilites = new DesiredCapabilities();
+
+		capabilites.setCapability("device", "Android");
+		capabilites.setCapability("deviceName", "Pixel 2");
+		capabilites.setCapability("platformName", "Android");
+
+		capabilites.setCapability("appPackage", "com.the511plus.MultiTouchTester");
+		capabilites.setCapability("appActivity", "com.the511plus.MultiTouchTester.MultiTouchTester");
+
+		
+        //open the App
+		
+		driver = new AndroidDriver<WebElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilites);
+		driver.manage().timeouts().implicitlyWait(20L, TimeUnit.SECONDS);
+		Thread.sleep(3000);
+		
+
+			 TouchAction action1 = new TouchAction(driver).tap(point(300, 175)).waitAction(waitOptions(Duration.ofMillis(250)));
+
+			 TouchAction action2 = new TouchAction(driver).tap(point(500, 845)).waitAction(waitOptions(Duration.ofMillis(250)));
+
+		     TouchAction action3 = new TouchAction(driver).tap(point(321, 205));
+
+
+				 Thread.sleep(3000);
+				 new MultiTouchAction(driver).add(action1).add(action2).add(action3).perform();;
+				 
+				 Thread.sleep(3000);
+				 
+				 driver.quit();
+				 
+				 
+				 
+			}
+			
+
+		
+
+		
+
+	}
+

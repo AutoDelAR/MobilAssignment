@@ -1,0 +1,84 @@
+//Assignment 2 : Ankura Raval
+package TestCases;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.google.common.collect.ImmutableMap;
+
+import ScrollUtil.ScrollUtil;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
+
+public class TestDialerApp {
+
+	public static AndroidDriver<WebElement> driver;
+
+	public static void main(String[] args) throws MalformedURLException, InterruptedException {
+
+	
+	 DesiredCapabilities capabilites = new DesiredCapabilities();
+
+	capabilites.setCapability("device", "Android");
+	capabilites.setCapability("deviceName", "Pixel 2");
+	capabilites.setCapability("platformName", "Android");
+
+	capabilites.setCapability("appPackage", "com.android.dialer");
+	capabilites.setCapability("appActivity", "com.android.dialer.app.DialtactsActivity");
+
+	
+    //open the App
+	
+	driver = new AndroidDriver<WebElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilites);
+	driver.manage().timeouts().implicitlyWait(20L, TimeUnit.SECONDS);
+	Thread.sleep(3000);
+	
+	
+    
+	//Dismiss alert if there are any alerts due to android version 
+	//if (driver.findElement(By.id("android:id/title_template")).isDisplayed()) {
+
+	driver.findElement(By.id("com.android.dialer:id/fab")).click();
+	
+     driver.findElementById("com.android.dialer:id/zero").click();
+      MobileElement longpress = (MobileElement) new WebDriverWait(driver, 30).
+              until(ExpectedConditions.elementToBeClickable(driver.findElementById("com.android.dialer:id/zero")));
+      new Actions(driver).clickAndHold(longpress).perform();
+      
+     driver.findElement(By.id("com.android.dialer:id/digits")).getText();
+     System.out.println("The Text displays as "+  driver.findElement(By.id("com.android.dialer:id/digits")).getText());
+      Thread.sleep(5000);
+	
+  
+	
+	
+	}
+			
+	
+	
+	//Thread.sleep(5000);
+
+		
+			 
+			// File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			 
+			// Thread.sleep(5000);
+			 
+			// driver.quit();
+			 
+			 
+			 
+		}

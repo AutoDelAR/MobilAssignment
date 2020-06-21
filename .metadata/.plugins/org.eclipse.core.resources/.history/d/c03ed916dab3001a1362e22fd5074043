@@ -1,0 +1,112 @@
+//Assignment 4 - Amazon Web Browser - Ankura Raval
+
+package TestCases;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.google.common.collect.ImmutableMap;
+
+import ScrollUtil.ScrollUtil;
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
+
+public class TestWebbrowserAndroid {
+
+	public static AndroidDriver driver;
+
+	public static void main(String[] args) throws MalformedURLException, InterruptedException {
+
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+
+		capabilities.setCapability("chromedriverExecutable", "C:/Appium/chromedriver.exe");
+
+		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel 2");
+
+		capabilities.setCapability(CapabilityType.BROWSER_NAME, "Chrome");
+
+		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+		driver.get("http://amazon.com");
+		driver.findElementById(("nav-search-keywords")).sendKeys("Appium Book");
+
+		driver.executeScript("mobile: performEditorAction", ImmutableMap.of("action", "search"));
+		long sleepTimeout = 10000;
+
+		Thread.sleep(sleepTimeout);
+
+		ScrollUtil.scrollToElement(By.xpath(
+				"//*[@id=\"search\"]/span[3]/div[2]/div[12]/div/span/div/div/div/div/div[1]/div/div/a/div[1]/h2"),
+				driver).click();
+
+		// Adding 10th book to cart
+
+		driver.findElement(By.id("mediaMatrixButton")).click();
+		driver.findElement(By.xpath("//*[@id=\"a-popover-content-1\"]/div/div/ul/li[2]/span/a/div/span[1]")).click();
+
+		driver.findElement(By.id("add-to-cart-button")).click();
+
+		// Print the customer Reviews:
+
+		// Dismiss alert if there are any alerts due to android version
+		driver.findElement(By.className("sc-product-image")).click();
+
+		boolean existsReviewLink = driver.findElements(By.id("acrCustomerReviewLink")).size() > 0;
+
+		if (existsReviewLink)
+
+		{
+			String string = driver
+					.findElementByXPath(
+							"//*[@id=\"aw-udpv3-customer-reviews_feature_div\"]/span[1]/div/div/a/div/div/div[1]/span")
+					.getText();
+			System.out.println("Customer Ratings for 10th Book is :" + string);
+
+		}
+
+		else {
+			driver.executeScript("mobile: performEditorAction", ImmutableMap.of("action", "search"));
+			Thread.sleep(sleepTimeout);
+			ScrollUtil.scrollToElement(By.xpath(
+					"//*[@id=\"search\"]/span[3]/div[2]/div[3]/div/span/div/div/div/div/div[1]/div/div/a/div[1]/h2/span"),
+					driver).click();
+			String string = driver
+					.findElementByXPath(
+							"//*[@id=\"aw-udpv3-customer-reviews_feature_div\"]/span[1]/div/div/a/div/div/div[1]/span")
+					.getText();
+			System.out.println("Customer Ratings for 10th Book is :" + string);
+
+		}
+
+		// Search for the Selenium Book
+		driver.findElementById(("nav-search-keywords")).sendKeys("Selenium Book");
+		driver.executeScript("mobile: performEditorAction", ImmutableMap.of("action", "search"));
+		long sleepTimeout1 = 10000;
+
+		Thread.sleep(sleepTimeout1);
+
+		ScrollUtil.scrollToElement(
+				By.xpath("//*[@id=\"search\"]/span[3]/div[2]/div[7]/div/span/div/div/div[1]/div/div/a/div[1]/h2/span"),
+				driver).click();
+		// ScrollUtil.scrollToElement(By.xpath("//*[@id=\"aw-udpv3-customer-reviews_feature_div\"]/span[5]/div/div/div"),
+		// driver);
+		driver.findElement(By.id("add-to-cart-button")).click();
+
+		//ScrollUtil.scrollToElement(By.xpath("//*[@id=\"nav-button-cart\"]/div/i"), driver).click();
+		//String string1 = driver.findElementByXPath("//*[@id='sc-proceed-to-checkout-params-form']/div[1]/span[2]/span").getText();
+		String string1 = driver.findElementByClassName("sc-white-space-nowrap sc-price-sign").getText();
+		System.out.println("Total cost of two book is : " + string1);
+
+	}
+
+}
